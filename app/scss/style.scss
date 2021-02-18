@@ -1,0 +1,11 @@
+@import './_vars.scss';
+@import './fonts.scss';
+@import './_main.scss';
+// Blocks
+@import './blocks/header.scss';
+@import './blocks/footer.scss';
+
+
+body {
+  display: flex;
+}
