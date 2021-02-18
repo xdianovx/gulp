@@ -3,10 +3,10 @@ const scss = require("gulp-sass");
 const concat = require("gulp-concat");
 const browserSync = require("browser-sync").create();
 const autoprefixer = require("gulp-autoprefixer");
-const imagemin = require('gulp-imagemin');
-const del = require('del');
-const sourcemaps = require('gulp-sourcemaps');
-
+const imagemin = require("gulp-imagemin");
+const del = require("del");
+const sourcemaps = require("gulp-sourcemaps");
+const notify = require("gulp-notify");
 
 // const webpack = require("webpack");
 // const webpackStream = require("webpack-stream");
@@ -21,24 +21,22 @@ function browsersync() {
 }
 
 function clear() {
-    return del('dist')
-    
+  return del("dist");
 }
 
 function img() {
-    return src('app/img/**/*')
-    .pipe(imagemin([
-        imagemin.gifsicle({interlaced: true}),
-        imagemin.mozjpeg({quality: 75, progressive: true}),
-        imagemin.optipng({optimizationLevel: 5}),
+  return src("app/img/**/*")
+    .pipe(
+      imagemin([
+        imagemin.gifsicle({ interlaced: true }),
+        imagemin.mozjpeg({ quality: 75, progressive: true }),
+        imagemin.optipng({ optimizationLevel: 5 }),
         imagemin.svgo({
-            plugins: [
-                {removeViewBox: true},
-                {cleanupIDs: false}
-            ]
-        })
-    ]))
-    .pipe(dest('dist/img/'))
+          plugins: [{ removeViewBox: true }, { cleanupIDs: false }],
+        }),
+      ])
+    )
+    .pipe(dest("dist/img/"));
 }
 
 function js() {
@@ -51,16 +49,17 @@ function js() {
 }
 
 function styles() {
-  return src("app/scss/style.scss")
-    .pipe(scss({ outputStyle: "compressed" }))
+  return src("app/scss/**/*.scss")
+    .pipe(sourcemaps.init())
+    .pipe(scss({ outputStyle: "compressed" }).on("error", notify.onError()))
     .pipe(
       autoprefixer({
         overrideBrowserslist: ["last 10 version"],
         grid: true,
       })
     )
-    .pipe(sourcemaps.init())
     .pipe(concat("style.min.css"))
+    .pipe(sourcemaps.write('.'))
     .pipe(dest("app/css"))
     .pipe(browserSync.stream());
 }
@@ -72,7 +71,7 @@ function dist() {
       "app/fonts/**/*",
       "app/js/main.js",
       "app/**/*.html",
-      "app/img/**/*"
+      "app/img/**/*",
     ],
     { base: "app" }
   ).pipe(dest("dist"));
