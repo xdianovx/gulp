@@ -1,20 +1,21 @@
 module.exports = {
-  entry: { main: './app/js/main.js' },
-    output: {
-      filename: 'build.js',
-    },
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx)$/,
-          exclude: /(node_modules)/,
+  output: {
+    filename: "main.js",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
           loader: 'babel-loader',
-          query: {
+          options: {
             presets: [
-              ['latest', { modules: false }],
-            ],
-          },
-        },
-      ],
-    },
-  };
+              ['@babel/preset-env', { targets: "defaults" }]
+            ]
+          }
+        }
+      }
+    ]
+  },
+};

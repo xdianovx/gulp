@@ -13,9 +13,9 @@ const ttf2woff = require("gulp-ttf2woff");
 const ttf2woff2 = require("gulp-ttf2woff2");
 const ttf2eot = require("gulp-ttf2eot");
 
-// const webpack = require("webpack");
-// const webpackStream = require("webpack-stream");
-// const webpackConfig = require("./webpack.config.js");
+const webpack = require("webpack");
+const webpackStream = require("webpack-stream");
+const webpackConfig = require("./webpack.config.js");
 
 function browsersync() {
   browserSync.init({
@@ -69,7 +69,7 @@ function img() {
 function js() {
   return (
     src(["app/js/main.js"])
-      // .pipe(webpackStream(webpackConfig), webpack)
+      .pipe(webpackStream(webpackConfig), webpack)
       .pipe(dest("./dist/js"))
       .pipe(browserSync.stream())
   );
