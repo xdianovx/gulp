@@ -40,7 +40,7 @@ function clear() {
 }
 
 function html() {
-  return src(["./app/**/*.html"])
+  return src(["./app/*.html"])
     .pipe(
       fileinclude({
         prefix: "@@",
