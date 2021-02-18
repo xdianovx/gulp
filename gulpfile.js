@@ -7,6 +7,7 @@ const imagemin = require("gulp-imagemin");
 const del = require("del");
 const sourcemaps = require("gulp-sourcemaps");
 const notify = require("gulp-notify");
+const fileinclude = require("gulp-file-include");
 
 // const webpack = require("webpack");
 // const webpackStream = require("webpack-stream");
@@ -15,13 +16,24 @@ const notify = require("gulp-notify");
 function browsersync() {
   browserSync.init({
     server: {
-      baseDir: "app/",
+      baseDir: "dist/",
     },
   });
 }
 
 function clear() {
   return del("dist");
+}
+
+function html() {
+  return src(["./app/**/*.html"]).pipe(
+    fileinclude({
+      prefix: "@@",
+      basepath: "@file",
+    }))
+    .pipe(dest('./dist/'))
+    .pipe(browserSync.stream())
+  
 }
 
 function img() {
@@ -36,7 +48,7 @@ function img() {
         }),
       ])
     )
-    .pipe(dest("dist/img/"));
+    .pipe(dest("./dist/img/"));
 }
 
 function js() {
@@ -59,8 +71,8 @@ function styles() {
       })
     )
     .pipe(concat("style.min.css"))
-    .pipe(sourcemaps.write('.'))
-    .pipe(dest("app/css"))
+    .pipe(sourcemaps.write("."))
+    .pipe(dest("dist/css"))
     .pipe(browserSync.stream());
 }
 
@@ -80,9 +92,12 @@ function dist() {
 function watching() {
   watch(["app/scss/**/*.scss"], styles);
   watch(["app/js/main.js"], js);
-  watch(["app/**/*.html"]).on("change", browserSync.reload);
+  watch(["app/**/*.html"], html);
+  watch(["app/img/**/*"], img);
 }
 
+
+exports.html = html
 exports.styles = styles;
 exports.js = js;
 exports.browsersync = browsersync;
@@ -92,4 +107,4 @@ exports.clear = clear;
 exports.dist = dist;
 
 exports.build = series(clear, dist, img);
-exports.default = parallel(browsersync, js, watching);
+exports.default = parallel(browsersync, html, styles, img, js, watching);
