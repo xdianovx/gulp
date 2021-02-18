@@ -70,7 +70,10 @@ function js() {
   return (
     src(["app/js/main.js"])
       .pipe(webpackStream(webpackConfig), webpack)
-      .pipe(dest("./dist/js"))
+      .pipe(dest("./dist/js")).on('error', function (err) {
+        console.error('WEBPACK ERROR', err);
+        this.emit('end'); // Don't stop the rest of the task
+      })
       .pipe(browserSync.stream())
   );
 }
