@@ -29,6 +29,7 @@
     "gulp-ttf2eot": "^1.1.2",
     "gulp-ttf2woff": "^1.1.1",
     "gulp-ttf2woff2": "^4.0.1",
+    "normalize.css": "^8.0.1",
     "webpack": "^5.22.0",
     "webpack-stream": "^6.1.2"
   }
